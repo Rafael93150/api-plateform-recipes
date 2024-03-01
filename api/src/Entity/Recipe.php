@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['recipe:read']],
@@ -39,40 +40,45 @@ class Recipe
     #[Groups(['recipe:read', 'recipe:write'])]
     #[ApiFilter(SearchFilter::class, strategy: SearchFilter::STRATEGY_IPARTIAL)]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt;
 
-    #[Groups(['recipe:read'])]
+    #[Groups(['recipe:read', 'recipe:write'])]
+    #[Assert\NotBlank]
     #[ORM\Column(length: 1023)]
     private ?string $instructions = null;
 
-    #[Groups(['recipe:read'])]
+    #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\Column]
     private ?int $preparationTime = null;
 
-    #[Groups(['recipe:read'])]
+    #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\Column(length: 63)]
+    #[Assert\Choice(choices: ['easy', 'medium', 'hard'])]
     private ?string $difficulty = null;
 
-    #[Groups(['recipe:read'])]
+    #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url]
     private ?string $picture = null;
 
+    #[Groups(['recipe:write'])]
     #[ORM\Column]
     private ?bool $public = true;
 
-    #[Groups(['recipe:read'])]
+    #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\Column]
     private array $ingredients = [];
 
-    #[Groups(['recipe:read'])]
+    #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Category $category = null;
 
-    #[Groups(['recipe:read'])]
+    #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Quantity::class)]
     private Collection $quantities;
 
