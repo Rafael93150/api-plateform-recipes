@@ -17,7 +17,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['recipe:read']],
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            paginationEnabled: false
+        ),
         new Get(),
         new Post(
             denormalizationContext: ['groups' => ['recipe:write']],

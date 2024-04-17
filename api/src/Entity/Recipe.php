@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\RecipeRepository;
@@ -21,14 +22,30 @@ use App\Validator\Constraints as CustomAssert;
 #[ApiResource(
     normalizationContext: ['groups' => ['recipe:read']],
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            paginationMaximumItemsPerPage: 50,
+            paginationClientItemsPerPage: true,
+        ),
         new Get(),
+        new Get(
+            uriTemplate: '/categories/{id}/recipes',
+            uriVariables: ['id' => new Link(
+                toProperty: 'category',
+                fromClass: Category::class,
+            )]
+        ),
         new Post(
             denormalizationContext: ['groups' => ['recipe:write']],
         ),
         new Patch(),
         new Delete(),
     ],
+    paginationItemsPerPage: 20,
+)]
+#[ApiFilter(
+    filterClass: SearchFilter::class,
+    strategy: SearchFilter::STRATEGY_PARTIAL,
+    properties: ['name']
 )]
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 class Recipe
