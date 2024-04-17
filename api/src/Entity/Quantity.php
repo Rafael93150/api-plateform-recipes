@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuantityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [],
@@ -17,14 +19,19 @@ class Quantity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'amount')]
+    #[ORM\ManyToOne(inversedBy: 'quantities')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['recipe:read'])]
     private ?Ingredient $ingredient = null;
 
     #[ORM\Column]
+    #[Groups(['recipe:read'])]
+    #[Assert\NotNull(message: 'Please enter an amount')]
     private ?int $amount = null;
 
     #[ORM\Column(length: 63, nullable: true)]
+    #[Groups(['recipe:read'])]
+    #[Assert\Choice(choices: ['g', 'kg', 'tbsp', 'tsp', 'cup', 'ml', 'l', 'clove', 'can', 'bunch', 'pinch', 'slice', 'whole'])]
     private ?string $unit = null;
 
     #[ORM\ManyToOne(inversedBy: 'quantities')]
@@ -36,6 +43,7 @@ class Quantity
         return $this->id;
     }
 
+    #[Groups(['recipe:read'])]
     public function getIngredient(): ?Ingredient
     {
         return $this->ingredient;
@@ -48,6 +56,7 @@ class Quantity
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getAmount(): ?int
     {
         return $this->amount;
@@ -60,6 +69,7 @@ class Quantity
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getUnit(): ?string
     {
         return $this->unit;

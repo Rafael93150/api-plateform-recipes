@@ -48,7 +48,6 @@ class RecipesFixtures extends Fixture implements DependentFixtureInterface
             $recipe->setPreparationTime($recipeToCreate['preparationTime']);
             $recipe->setDifficulty($recipeToCreate['difficulty']);
             $recipe->setCategory($faker->randomElement($categories));
-            $manager->persist($recipe);
 
             for ($i = 0; $i < 3; $i++) {
                 $quantity = new Quantity();
@@ -57,7 +56,9 @@ class RecipesFixtures extends Fixture implements DependentFixtureInterface
                 $quantity->setAmount(rand(1, 200));
                 $quantity->setUnit(array_rand(['g', 'kg', 'tbsp', 'tsp', 'cup', 'ml', 'l', 'clove', 'can', 'bunch', 'pinch', 'slice', 'whole']));
                 $manager->persist($quantity);
+                $recipe->addQuantity($quantity);
             }
+            $manager->persist($recipe);
         }
 
         $manager->flush();
