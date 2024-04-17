@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as CustomAssert;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['recipe:read']],
@@ -71,6 +72,7 @@ class Recipe
 
     #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\Column]
+    #[CustomAssert\AtLeastThreeIngredients]
     private array $ingredients = [];
 
     #[Groups(['recipe:read', 'recipe:write'])]
