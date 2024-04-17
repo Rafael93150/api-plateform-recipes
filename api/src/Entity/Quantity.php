@@ -2,9 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuantityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource(
+    operations: [],
+)]
 #[ORM\Entity(repositoryClass: QuantityRepository::class)]
 class Quantity
 {

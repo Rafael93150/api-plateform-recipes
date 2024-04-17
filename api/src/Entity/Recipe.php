@@ -93,11 +93,13 @@ class Recipe
         return $this->id;
     }
 
+    #[Groups(['recipe:read'])]
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    #[Groups(['recipe:write'])]
     public function setName(string $name): static
     {
         $this->name = $name;
@@ -105,16 +107,19 @@ class Recipe
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
+    #[Groups(['recipe:read'])]
     public function getInstructions(): ?string
     {
         return $this->instructions;
     }
 
+    #[Groups(['recipe:write'])]
     public function setInstructions(string $instructions): static
     {
         $this->instructions = $instructions;
@@ -122,11 +127,13 @@ class Recipe
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getPreparationTime(): ?int
     {
         return $this->preparationTime;
     }
 
+    #[Groups(['recipe:write'])]
     public function setPreparationTime(int $preparationTime): static
     {
         $this->preparationTime = $preparationTime;
@@ -134,11 +141,13 @@ class Recipe
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getDifficulty(): ?string
     {
         return $this->difficulty;
     }
 
+    #[Groups(['recipe:write'])]
     public function setDifficulty(string $difficulty): static
     {
         $this->difficulty = $difficulty;
@@ -146,11 +155,13 @@ class Recipe
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getPicture(): ?string
     {
         return $this->picture;
     }
 
+    #[Groups(['recipe:write'])]
     public function setPicture(?string $picture): static
     {
         $this->picture = $picture;
@@ -158,11 +169,13 @@ class Recipe
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function isPublic(): ?bool
     {
         return $this->public;
     }
 
+    #[Groups(['recipe:write'])]
     public function setPublic(bool $public): static
     {
         $this->public = $public;
@@ -170,11 +183,13 @@ class Recipe
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getIngredients(): array
     {
         return $this->ingredients;
     }
 
+    #[Groups(['recipe:write'])]
     public function setIngredients(object $ingredients): static
     {
         $this->ingredients = $ingredients;
@@ -182,11 +197,13 @@ class Recipe
         return $this;
     }
 
+    #[Groups(['recipe:read'])]
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
+    #[Groups(['recipe:write'])]
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
@@ -197,6 +214,7 @@ class Recipe
     /**
      * @return Collection<int, Quantity>
      */
+    #[Groups(['recipe:read'])]
     public function getQuantities(): Collection
     {
         return $this->quantities;

@@ -2,11 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['recipe:read']]
+        ),
+    ],
+)]
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
 class Ingredient
 {
@@ -16,6 +26,7 @@ class Ingredient
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['recipe:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: Quantity::class)]
@@ -31,6 +42,7 @@ class Ingredient
         return $this->id;
     }
 
+    #[Groups(['recipe:read'])]
     public function getName(): ?string
     {
         return $this->name;
