@@ -88,23 +88,23 @@ class Recipe
     private ?bool $public = true;
 
     #[Groups(['recipe:read', 'recipe:write'])]
-    #[ORM\Column]
-    #[CustomAssert\AtLeastThreeIngredients]
-    private array $ingredients = [];
-
-    #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Category $category = null;
 
     #[Groups(['recipe:read', 'recipe:write'])]
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Quantity::class)]
+    #[CustomAssert\AtLeastThreeIngredients]
     private Collection $quantities;
+
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Comment::class)]
+    private Collection $comments;
 
     public function __construct()
     {
         $this->quantities = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -203,20 +203,6 @@ class Recipe
     }
 
     #[Groups(['recipe:read'])]
-    public function getIngredients(): array
-    {
-        return $this->ingredients;
-    }
-
-    #[Groups(['recipe:write'])]
-    public function setIngredients(object $ingredients): static
-    {
-        $this->ingredients = $ingredients;
-
-        return $this;
-    }
-
-    #[Groups(['recipe:read'])]
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -255,6 +241,36 @@ class Recipe
             // set the owning side to null (unless already changed)
             if ($quantity->getRecipe() === $this) {
                 $quantity->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getRecipe() === $this) {
+                $comment->setRecipe(null);
             }
         }
 
