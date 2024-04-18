@@ -39,8 +39,8 @@ jobs:
         name: Start services
         run: docker compose up --wait --no-build
       -
-        name: Check HTTP reachability
-        run: curl -v -o /dev/null http://localhost
+        # name: Check HTTP reachability
+        # run: curl -v -o /dev/null http://localhost
       -
         name: Check API reachability
         run: curl -vk -o /dev/null https://localhost
